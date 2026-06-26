@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en" x-data="site()">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monarca Steakhouse | Colombian Buffet · Norcross, GA</title>
+  <meta name="description" content="All-you-can-eat Colombian rodizio buffet in Norcross, GA. Lechona, sancocho, fresh ceviche, and tableside carved meats. $22 Mon–Fri · $25 Sat–Sun.">
+  <meta property="og:title" content="Monarca Steakhouse | Colombian Buffet · Norcross, GA">
+  <meta property="og:description" content="Unlimited Colombian food. Rodizio-style tableside carving. $22 Mon–Fri, $25 weekends. 5705 Buford Hwy, Norcross GA.">
+  <meta property="og:image" content="./assets/images/catrina.png">
+  <meta property="og:type" content="restaurant">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            black:    '#0A0A0A',
+            surface:  '#141414',
+            card:     '#1C1C1C',
+            gold:     '#C9A84C',
+            'gold-lt':'#E8C96A',
+            orange:   '#E07B39',
+            cream:    '#F5F0E8',
+            muted:    '#7A7268',
+            border:   '#2C2C2C',
+          },
+          fontFamily: {
+            display: ['Playfair Display', 'serif'],
+            body:    ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: #0A0A0A; color: #F5F0E8; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+
+    /* Gold gradient text */
+    .gold-text {
+      background: linear-gradient(135deg, #b8922f 0%, #E8C96A 45%, #C9A84C 70%, #b8922f 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Thin dividers */
+    .rule-gold {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #C9A84C 30%, #C9A84C 70%, transparent);
+    }
+    .rule-muted {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #2C2C2C 30%, #2C2C2C 70%, transparent);
+    }
+
+    /* Section label */
+    .eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #C9A84C;
+    }
+
+    /* Hero overlay — keeps Catrina visible, fades bottom */
+    .hero-overlay {
+      background: linear-gradient(
+        to bottom,
+        rgba(10,10,10,0.10) 0%,
+        rgba(10,10,10,0.15) 25%,
+        rgba(10,10,10,0.55) 58%,
+        rgba(10,10,10,0.97) 100%
+      );
+    }
+
+    /* Nav blur */
+    .nav-bg { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+
+    /* Dish card */
+    .dish-card { transition: border-color 0.3s ease, transform 0.3s ease; }
+    .dish-card:hover { transform: translateY(-4px); border-color: rgba(201,168,76,0.5) !important; }
+    .dish-card .thumb { transition: transform 0.6s ease; }
+    .dish-card:hover .thumb { transform: scale(1.07); }
+
+    /* Pricing card */
+    .price-card {
+      border: 1px solid rgba(201,168,76,0.25);
+      background: rgba(28,28,28,0.8);
+      transition: border-color 0.3s ease, transform 0.3s ease;
+    }
+    .price-card:hover { border-color: rgba(201,168,76,0.7); transform: translateY(-6px); }
+
+    /* Buttons */
+    .btn-primary {
+      background: #C9A84C;
+      color: #0A0A0A;
+      font-weight: 700;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 1rem 2.5rem;
+      display: inline-block;
+      transition: background 0.25s ease;
+      text-align: center;
+    }
+    .btn-primary:hover { background: #E8C96A; }
+
+    .btn-outline {
+      border: 1px solid rgba(245,240,232,0.35);
+      color: #F5F0E8;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 1rem 2.5rem;
+      display: inline-block;
+      transition: border-color 0.25s ease, color 0.25s ease;
+      text-align: center;
+    }
+    .btn-outline:hover { border-color: #C9A84C; color: #C9A84C; }
+
+    .btn-gold-outline {
+      border: 1px solid rgba(201,168,76,0.4);
+      color: #C9A84C;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 1rem 2.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: border-color 0.25s ease, background 0.25s ease;
+      text-align: center;
+      justify-content: center;
+    }
+    .btn-gold-outline:hover { border-color: #C9A84C; background: rgba(201,168,76,0.08); }
+
+    /* Mobile menu overlay */
+    [x-cloak] { display: none !important; }
+
+    /* Scroll indicator pulse */
+    @keyframes bob { 0%,100% { transform:translateY(0); } 50% { transform:translateY(6px); } }
+    .bob { animation: bob 1.8s ease-in-out infinite; }
+
+    /* Map desaturate */
+    .map-wrap iframe { filter: grayscale(70%) contrast(1.05) brightness(0.9); }
+
+    /* Floral side accents */
+    .floral-left, .floral-right {
+      position: absolute; top: 0; width: 90px; height: 100%;
+      background-image: url('./assets/images/floral-frame.png');
+      background-size: cover; pointer-events: none; opacity: 0.18;
+    }
+    .floral-left { left: 0; background-position: left center; }
+    .floral-right { right: 0; background-position: right center; transform: scaleX(-1); }
+  </style>
+</head>
+
+<body class="font-body">
+
+  <!-- ─── FLOATING WHATSAPP ─────────────────────────────────── -->
+  <a href="https://wa.me/14708078879" target="_blank" rel="noopener noreferrer"
+     title="WhatsApp"
+     class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-green-500 hover:bg-green-400 flex items-center justify-center shadow-2xl transition-colors">
+    <i class="fa-brands fa-whatsapp text-2xl text-white"></i>
+  </a>
+
+  <!-- ─── NAVIGATION ────────────────────────────────────────── -->
+  <header
+    x-data="{ scrolled: false, open: false }"
+    @scroll.window="scrolled = window.scrollY > 60"
+    :class="scrolled ? 'bg-black/95 shadow-xl' : 'bg-transparent'"
+    class="fixed top-0 left-0 right-0 z-40 transition-all duration-400 nav-bg">
+
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+
+      <!-- Logo -->
+      <a href="#" class="flex flex-col leading-none">
+        <span class="font-display text-lg font-bold tracking-widest text-cream uppercase">Monarca</span>
+        <span class="eyebrow" style="font-size:0.55rem; letter-spacing:0.25em;">Steakhouse · Bar &amp; Grill</span>
+      </a>
+
+      <!-- Desktop links -->
+      <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
+        <a href="#experience" class="text-muted hover:text-cream text-xs tracking-widest uppercase transition-colors" x-text="t('nav_exp')"></a>
+        <a href="#menu"       class="text-muted hover:text-cream text-xs tracking-widest uppercase transition-colors" x-text="t('nav_menu')"></a>
+        <a href="#pricing"    class="text-muted hover:text-cream text-xs tracking-widest uppercase transition-colors" x-text="t('nav_price')"></a>
+        <a href="#location"   class="text-muted hover:text-cream text-xs tracking-widest uppercase transition-colors" x-text="t('nav_loc')"></a>
+
+        <!-- Language toggle -->
+        <div class="flex gap-2 text-xs items-center" role="group" aria-label="Language">
+          <button @click="lang='en'" :class="lang==='en' ? 'text-gold font-semibold' : 'text-muted'" class="transition-colors">EN</button>
+          <span class="text-border">|</span>
+          <button @click="lang='es'" :class="lang==='es' ? 'text-gold font-semibold' : 'text-muted'" class="transition-colors">ES</button>
+        </div>
+
+        <a href="tel:4708078879" class="btn-primary" x-text="t('nav_cta')"></a>
+      </nav>
+
+      <!-- Mobile: lang + hamburger -->
+      <div class="flex md:hidden items-center gap-4">
+        <button @click="lang = lang==='en' ? 'es' : 'en'" class="text-gold text-xs font-semibold tracking-widest" x-text="lang==='en' ? 'ES' : 'EN'"></button>
+        <button @click="open = !open" class="text-cream" :aria-expanded="open" aria-controls="mobile-menu" aria-label="Toggle menu">
+          <i x-show="!open" class="fa-solid fa-bars text-xl"></i>
+          <i x-show="open"  class="fa-solid fa-xmark text-xl" x-cloak></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu"
+         x-show="open" x-cloak
+         x-transition:enter="transition ease-out duration-250"
+         x-transition:enter-start="opacity-0 -translate-y-2"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="md:hidden bg-black/98 border-t border-border px-6 py-8 flex flex-col gap-6">
+      <a href="#experience" @click="open=false" class="font-display text-2xl text-cream hover:text-gold transition-colors" x-text="t('nav_exp')"></a>
+      <a href="#menu"       @click="open=false" class="font-display text-2xl text-cream hover:text-gold transition-colors" x-text="t('nav_menu')"></a>
+      <a href="#pricing"    @click="open=false" class="font-display text-2xl text-cream hover:text-gold transition-colors" x-text="t('nav_price')"></a>
+      <a href="#location"   @click="open=false" class="font-display text-2xl text-cream hover:text-gold transition-colors" x-text="t('nav_loc')"></a>
+      <a href="tel:4708078879" @click="open=false" class="btn-primary w-full mt-2" x-text="t('nav_cta')"></a>
+    </div>
+  </header>
+
+
+  <!-- ─── HERO ──────────────────────────────────────────────── -->
+  <section class="relative min-h-screen flex items-end overflow-hidden">
+
+    <!-- Catrina background -->
+    <div class="absolute inset-0">
+      <img src="./assets/images/catrina.png"
+           alt=""
+           fetchpriority="high"
+           class="w-full h-full object-cover object-center"
+           aria-hidden="true">
+    </div>
+
+    <!-- Gradient overlay -->
+    <div class="absolute inset-0 hero-overlay"></div>
+
+    <!-- Content anchored to bottom-left -->
+    <div class="relative z-10 w-full max-w-7xl mx-auto px-6 pb-20 md:pb-28">
+      <p class="eyebrow mb-6" x-text="t('hero_tag')"></p>
+
+      <h1 class="font-display font-black leading-[0.92] mb-6">
+        <span class="block text-cream"
+              style="font-size: clamp(3rem, 9vw, 7rem);"
+              x-text="t('hero_h1')"></span>
+        <span class="block italic gold-text"
+              style="font-size: clamp(3rem, 9vw, 7rem);"
+              x-text="t('hero_h2')"></span>
+      </h1>
+
+      <p class="text-muted text-base md:text-lg max-w-md leading-relaxed mb-10"
+         x-text="t('hero_sub')"></p>
+
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a href="tel:4708078879" class="btn-primary" x-text="t('hero_cta1')"></a>
+        <a href="#menu" class="btn-outline" x-text="t('hero_cta2')"></a>
+      </div>
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-gold/40 bob pointer-events-none">
+      <i class="fa-solid fa-chevron-down text-xs"></i>
+    </div>
+  </section>
+
+
+  <!-- ─── FLORAL DIVIDER ───────────────────────────────────── -->
+  <div class="w-full overflow-hidden" style="height: 100px;">
+    <img src="./assets/images/floral-banner.png"
+         alt=""
+         loading="lazy"
+         class="w-full h-full object-cover object-center"
+         aria-hidden="true">
+  </div>
+
+
+  <!-- ─── EXPERIENCE ────────────────────────────────────────── -->
+  <section id="experience" class="relative py-28 md:py-36 overflow-hidden">
+
+    <!-- Floral side accents (desktop only) -->
+    <div class="floral-left hidden lg:block"></div>
+    <div class="floral-right hidden lg:block"></div>
+
+    <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+      <p class="eyebrow mb-5" x-text="t('exp_eye')"></p>
+
+      <h2 class="font-display font-bold text-cream leading-tight mb-6"
+          style="font-size: clamp(2.2rem, 5vw, 4rem);"
+          x-text="t('exp_h2')"></h2>
+
+      <div class="rule-gold max-w-[80px] mx-auto mb-8"></div>
+
+      <p class="text-muted text-lg leading-relaxed max-w-2xl mx-auto mb-14"
+         x-text="t('exp_body')"></p>
+
+      <!-- 4 Feature pillars -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto text-left">
+        <template x-for="item in t('exp_pills')" :key="item.icon">
+          <div class="flex items-start gap-4 bg-card border border-border rounded-sm px-5 py-4">
+            <i :class="item.icon" class="text-orange mt-0.5 flex-shrink-0 text-base"></i>
+            <span class="text-cream text-sm leading-snug" x-text="item.text"></span>
+          </div>
+        </template>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ─── MENU ──────────────────────────────────────────────── -->
+  <section id="menu" class="py-24 md:py-32 bg-surface">
+    <div class="max-w-7xl mx-auto px-6">
+
+      <div class="text-center mb-14">
+        <p class="eyebrow mb-4" x-text="t('menu_eye')"></p>
+        <h2 class="font-display font-bold text-cream"
+            style="font-size: clamp(2rem, 4.5vw, 3.5rem);"
+            x-text="t('menu_h2')"></h2>
+        <div class="rule-gold max-w-[60px] mx-auto mt-6"></div>
+      </div>
+
+      <!-- Dish grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <template x-for="dish in t('dishes')" :key="dish.name">
+          <article class="dish-card bg-card border border-border rounded-sm overflow-hidden">
+            <div class="relative overflow-hidden" style="height:220px;">
+              <img :src="dish.img"
+                   :alt="dish.name"
+                   loading="lazy"
+                   class="thumb w-full h-full object-cover">
+              <span x-show="dish.badge"
+                    class="absolute top-3 right-3 bg-gold text-black text-[0.6rem] font-bold px-2 py-1 tracking-widest uppercase"
+                    x-text="t('badge')"></span>
+            </div>
+            <div class="p-5">
+              <h3 class="font-display text-lg text-cream mb-1" x-text="dish.name"></h3>
+              <p class="text-muted text-sm leading-relaxed" x-text="dish.desc"></p>
+            </div>
+          </article>
+        </template>
+      </div>
+
+      <!-- Extras note -->
+      <p class="text-center text-muted text-sm italic mt-10" x-text="t('menu_note')"></p>
+    </div>
+  </section>
+
+
+  <!-- ─── PRICING ───────────────────────────────────────────── -->
+  <section id="pricing" class="relative py-28 md:py-36 overflow-hidden">
+
+    <!-- Floral bg wash -->
+    <div class="absolute inset-0 pointer-events-none"
+         style="background-image: url('./assets/images/floral-banner.png'); background-size: cover; background-position: center; opacity: 0.08;"></div>
+    <div class="absolute inset-0 bg-black/82 pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-3xl mx-auto px-6 text-center">
+      <p class="eyebrow mb-5" x-text="t('price_eye')"></p>
+
+      <h2 class="font-display font-bold text-cream mb-4"
+          style="font-size: clamp(2.2rem, 5vw, 4rem);"
+          x-text="t('price_h2')"></h2>
+
+      <div class="rule-gold max-w-[60px] mx-auto mb-14"></div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
+
+        <!-- Weekday -->
+        <div class="price-card rounded-sm p-10">
+          <p class="text-muted text-xs tracking-widest uppercase mb-3" x-text="t('price_wday')"></p>
+          <p class="font-display font-black gold-text leading-none" style="font-size: 5rem;">$22</p>
+          <p class="text-muted text-xs mt-3 tracking-wide" x-text="t('per_person')"></p>
+        </div>
+
+        <!-- Weekend -->
+        <div class="price-card rounded-sm p-10" style="border-color: rgba(201,168,76,0.5);">
+          <p class="text-muted text-xs tracking-widest uppercase mb-3" x-text="t('price_wend')"></p>
+          <p class="font-display font-black gold-text leading-none" style="font-size: 5rem;">$25</p>
+          <p class="text-muted text-xs mt-3 tracking-wide" x-text="t('per_person')"></p>
+        </div>
+      </div>
+
+      <p class="text-muted mb-10 text-sm" x-text="t('price_note')"></p>
+      <a href="tel:4708078879" class="btn-primary" x-text="t('price_cta')"></a>
+    </div>
+  </section>
+
+
+  <!-- ─── LOCATION ──────────────────────────────────────────── -->
+  <section id="location" class="py-24 md:py-32 bg-surface">
+    <div class="max-w-7xl mx-auto px-6">
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
+
+        <!-- Info column -->
+        <div>
+          <p class="eyebrow mb-5" x-text="t('loc_eye')"></p>
+          <h2 class="font-display font-bold text-cream mb-8"
+              style="font-size: clamp(2rem, 4vw, 3rem);"
+              x-text="t('loc_h2')"></h2>
+          <div class="rule-gold mb-10"></div>
+
+          <!-- Address -->
+          <div class="flex gap-4 mb-5">
+            <i class="fa-solid fa-location-dot text-gold text-base flex-shrink-0 mt-0.5"></i>
+            <div>
+              <p class="text-cream font-medium text-sm">5705 Buford Highway</p>
+              <p class="text-muted text-sm">Norcross, GA 30071</p>
+            </div>
+          </div>
+
+          <!-- Phone -->
+          <div class="flex gap-4 mb-5">
+            <i class="fa-solid fa-phone text-gold text-base flex-shrink-0 mt-0.5"></i>
+            <a href="tel:4708078879" class="text-cream hover:text-gold text-sm transition-colors">(470) 807-8879</a>
+          </div>
+
+          <!-- Hours -->
+          <div class="flex gap-4 mb-10">
+            <i class="fa-regular fa-clock text-gold text-base flex-shrink-0 mt-0.5"></i>
+            <p class="text-cream text-sm" x-text="t('loc_hours')"></p>
+          </div>
+
+          <!-- Social -->
+          <div class="flex gap-6 mb-10">
+            <a href="https://instagram.com/monarca.steak" target="_blank" rel="noopener noreferrer"
+               class="flex items-center gap-2 text-muted hover:text-gold transition-colors">
+              <i class="fa-brands fa-instagram text-lg"></i>
+              <span class="text-xs">@monarca.steak</span>
+            </a>
+            <a href="https://www.facebook.com/profile.php?id=100063455516272" target="_blank" rel="noopener noreferrer"
+               class="flex items-center gap-2 text-muted hover:text-gold transition-colors">
+              <i class="fa-brands fa-facebook text-lg"></i>
+              <span class="text-xs">Monarca Steak House</span>
+            </a>
+          </div>
+
+          <!-- CTAs -->
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="tel:4708078879" class="btn-primary" x-text="t('loc_cta1')"></a>
+            <a href="https://wa.me/14708078879" target="_blank" rel="noopener noreferrer" class="btn-gold-outline">
+              <i class="fa-brands fa-whatsapp text-base"></i>
+              <span x-text="t('loc_cta2')"></span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Map column -->
+        <div class="map-wrap rounded-sm overflow-hidden border border-border shadow-2xl" style="min-height: 420px;">
+          <iframe
+            title="Monarca Steakhouse Map"
+            src="https://maps.google.com/maps?q=5705+Buford+Hwy+Norcross+GA+30071&output=embed&z=15"
+            width="100%"
+            height="420"
+            style="border:0; display:block;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ─── FOOTER ────────────────────────────────────────────── -->
+  <footer class="bg-black border-t border-border pt-10 pb-8">
+
+    <!-- Thin floral accent -->
+    <div class="w-full overflow-hidden mb-8 opacity-25" style="height: 60px;">
+      <img src="./assets/images/floral-banner.png" alt="" class="w-full h-full object-cover" aria-hidden="true">
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+
+        <!-- Logo -->
+        <div class="text-center md:text-left">
+          <p class="font-display text-lg font-bold tracking-widest text-cream uppercase">Monarca</p>
+          <p class="eyebrow mt-0.5" style="font-size: 0.55rem;">Steakhouse · Bar &amp; Grill · Norcross, GA</p>
+        </div>
+
+        <!-- Nav links -->
+        <div class="flex gap-8 text-xs">
+          <a href="#experience" class="text-muted hover:text-gold transition-colors tracking-widest uppercase" x-text="t('nav_exp')"></a>
+          <a href="#menu"       class="text-muted hover:text-gold transition-colors tracking-widest uppercase" x-text="t('nav_menu')"></a>
+          <a href="#pricing"    class="text-muted hover:text-gold transition-colors tracking-widest uppercase" x-text="t('nav_price')"></a>
+          <a href="#location"   class="text-muted hover:text-gold transition-colors tracking-widest uppercase" x-text="t('nav_loc')"></a>
+        </div>
+
+        <!-- Social icons -->
+        <div class="flex gap-5 text-muted">
+          <a href="https://instagram.com/monarca.steak" target="_blank" rel="noopener noreferrer" class="hover:text-gold transition-colors" aria-label="Instagram">
+            <i class="fa-brands fa-instagram text-xl"></i>
+          </a>
+          <a href="https://www.facebook.com/profile.php?id=100063455516272" target="_blank" rel="noopener noreferrer" class="hover:text-gold transition-colors" aria-label="Facebook">
+            <i class="fa-brands fa-facebook text-xl"></i>
+          </a>
+          <a href="https://wa.me/14708078879" target="_blank" rel="noopener noreferrer" class="hover:text-gold transition-colors" aria-label="WhatsApp">
+            <i class="fa-brands fa-whatsapp text-xl"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="rule-muted my-6"></div>
+
+      <p class="text-muted text-xs text-center tracking-wide" x-text="t('footer')"></p>
+    </div>
+  </footer>
+
+
+  <!-- ─── DATA + TRANSLATIONS ──────────────────────────────── -->
+  <script>
+    function site() {
+      return {
+
+        lang: 'en',
+
+        init() {
+          const browser = (navigator.language || '').slice(0, 2);
+          if (browser === 'es') this.lang = 'es';
+        },
+
+        /* Dish photo IDs — real Unsplash photography */
+        photos: {
+          lechona:  'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+          picanha:  'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+          sancocho: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=800&q=80',
+          cazuela:  'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=80',
+          ceviche:  'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=800&q=80',
+          arroz:    'https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80',
+        },
+
+        translations: {
+          en: {
+            nav_exp:   'Experience',
+            nav_menu:  'Menu',
+            nav_price: 'Pricing',
+            nav_loc:   'Location',
+            nav_cta:   'Reserve a Table',
+
+            hero_tag: 'Colombian Buffet · Steakhouse · Norcross, GA',
+            hero_h1:  'Colombian Food.',
+            hero_h2:  'No Limits.',
+            hero_sub: 'All-you-can-eat rodizio buffet. One price, all night.',
+            hero_cta1:'Reserve a Table',
+            hero_cta2:'See the Menu',
+
+            exp_eye:  'The Experience',
+            exp_h2:   'An endless Colombian feast.',
+            exp_body: 'We run a Colombian rodizio buffet. Lechona, sancocho, arroz mixto, and freshly carved meats brought tableside until you\'re done. One flat price. No surprises.',
+            exp_pills: [
+              { icon: 'fa-solid fa-fire',              text: 'Live carving station & buffet line' },
+              { icon: 'fa-solid fa-bowl-food',         text: 'Fresh sancocho & cazuela de mariscos' },
+              { icon: 'fa-solid fa-leaf',              text: 'Ceviche, salad & tropical sides' },
+              { icon: 'fa-solid fa-martini-glass-citrus', text: 'Full bar & fresh fruit juices' },
+            ],
+
+            menu_eye: 'On the Table',
+            menu_h2:  "Tonight's Spread",
+            menu_note:'Plus daily specials, yuca, papa, fresh salads, and more.',
+            badge:    'House Favorite',
+
+            dishes: [
+              {
+                name: 'Lechona',
+                desc: 'Slow-roasted whole pig, yellow rice, peas, crackling.',
+                img:  'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+                badge: true,
+              },
+              {
+                name: 'Picanha',
+                desc: 'Salt-crusted top sirloin cap carved tableside, chimichurri.',
+                img:  'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+                badge: true,
+              },
+              {
+                name: 'Sancocho',
+                desc: 'Chicken soup with corn, yuca, papa, and fresh cilantro.',
+                img:  'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=800&q=80',
+                badge: false,
+              },
+              {
+                name: 'Cazuela de Mariscos',
+                desc: 'Seafood stew in creamy tomato broth, coconut rice.',
+                img:  'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=80',
+                badge: false,
+              },
+              {
+                name: 'Ceviche de Camarón',
+                desc: 'Shrimp in citrus-tomato, red onion, cilantro, patacones.',
+                img:  'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=800&q=80',
+                badge: false,
+              },
+              {
+                name: 'Arroz Mixto',
+                desc: 'Mixed rice with vegetables, chicken, and chorizo.',
+                img:  'https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80',
+                badge: false,
+              },
+            ],
+
+            price_eye:  'Pricing',
+            price_h2:   'One Price. Everything Included.',
+            price_wday: 'Monday – Friday',
+            price_wend: 'Saturday – Sunday',
+            per_person: 'per person',
+            price_note: 'All-you-can-eat. Rodizio tableside service. No surprises.',
+            price_cta:  'Reserve Your Table',
+
+            loc_eye:   'Find Us',
+            loc_h2:    'Come Hungry',
+            loc_hours: 'Open Daily · Call for Hours',
+            loc_cta1:  'Call to Reserve',
+            loc_cta2:  'WhatsApp',
+
+            footer: '© 2025 Monarca Steakhouse. All rights reserved.',
+          },
+
+          es: {
+            nav_exp:   'Experiencia',
+            nav_menu:  'Menú',
+            nav_price: 'Precios',
+            nav_loc:   'Ubicación',
+            nav_cta:   'Reservar Mesa',
+
+            hero_tag: 'Buffet Colombiano · Steakhouse · Norcross, GA',
+            hero_h1:  'Comida Colombiana.',
+            hero_h2:  'Sin Límite.',
+            hero_sub: 'Buffet rodizio todo incluido. Un precio, toda la noche.',
+            hero_cta1:'Reservar Mesa',
+            hero_cta2:'Ver el Menú',
+
+            exp_eye:  'La Experiencia',
+            exp_h2:   'Un festín colombiano sin fin.',
+            exp_body: 'Buffet rodizio colombiano. Lechona, sancocho, arroz mixto y carnes recién cortadas servidas en tu mesa hasta que termines. Un precio fijo. Sin sorpresas.',
+            exp_pills: [
+              { icon: 'fa-solid fa-fire',              text: 'Estación de carving en vivo y buffet' },
+              { icon: 'fa-solid fa-bowl-food',         text: 'Sancocho fresco y cazuela de mariscos' },
+              { icon: 'fa-solid fa-leaf',              text: 'Ceviche, ensalada y acompañantes tropicales' },
+              { icon: 'fa-solid fa-martini-glass-citrus', text: 'Bar completo y jugos naturales frescos' },
+            ],
+
+            menu_eye: 'En la Mesa',
+            menu_h2:  'Lo de Esta Noche',
+            menu_note:'Más especialidades del día, yuca, papa, ensaladas frescas y mucho más.',
+            badge:    'Favorito de la Casa',
+
+            dishes: [
+              {
+                name: 'Lechona',
+                desc: 'Cerdo entero al horno, arroz amarillo, arvejas, chicharrón.',
+                img:  'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+                badge: true,
+              },
+              {
+                name: 'Picanha',
+                desc: 'Picaña con costra de sal cortada en mesa, chimichurri al lado.',
+                img:  'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+                badge: true,
+              },
+              {
+                name: 'Sancocho',
+                desc: 'Sancocho de pollo con maíz, yuca, papa y cilantro fresco.',
+                img:  'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=800&q=80',
+                badge: false,
+              },
+              {
+                name: 'Cazuela de Mariscos',
+                desc: 'Mariscos en caldo cremoso de tomate, arroz con coco.',
+                img:  'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=80',
+                badge: false,
+              },
+              {
+                name: 'Ceviche de Camarón',
+                desc: 'Camarón en cítrico-tomate, cebolla, cilantro, patacones.',
+                img:  'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=800&q=80',
+                badge: false,
+              },
+              {
+                name: 'Arroz Mixto',
+                desc: 'Arroz mixto con verduras, pollo y chorizo.',
+                img:  'https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80',
+                badge: false,
+              },
+            ],
+
+            price_eye:  'Precios',
+            price_h2:   'Un Precio. Todo Incluido.',
+            price_wday: 'Lunes – Viernes',
+            price_wend: 'Sábado – Domingo',
+            per_person: 'por persona',
+            price_note: 'Todo lo que puedas comer. Servicio rodizio. Sin sorpresas.',
+            price_cta:  'Reservar Tu Mesa',
+
+            loc_eye:   'Encuéntranos',
+            loc_h2:    'Ven con Hambre',
+            loc_hours: 'Abierto todos los días · Llama para horarios',
+            loc_cta1:  'Llamar para Reservar',
+            loc_cta2:  'WhatsApp',
+
+            footer: '© 2025 Monarca Steakhouse. Todos los derechos reservados.',
+          },
+        },
+
+        t(key) {
+          const val = this.translations[this.lang][key];
+          return val !== undefined ? val : key;
+        },
+      };
+    }
+  </script>
+
+</body>
+</html>
