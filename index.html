@@ -439,8 +439,15 @@
 
           <!-- Hours -->
           <div class="flex gap-4 mb-10">
-            <i class="fa-regular fa-clock text-gold text-base flex-shrink-0 mt-0.5"></i>
-            <p class="text-cream text-sm" x-text="t('loc_hours')"></p>
+            <i class="fa-regular fa-clock text-gold text-base flex-shrink-0 mt-1"></i>
+            <div class="flex flex-col gap-1.5">
+              <template x-for="row in t('hours')" :key="row.days">
+                <div class="flex gap-4 text-sm">
+                  <span class="text-muted w-36 flex-shrink-0" x-text="row.days"></span>
+                  <span class="text-cream" x-text="row.time"></span>
+                </div>
+              </template>
+            </div>
           </div>
 
           <!-- Social -->
@@ -630,11 +637,15 @@
             price_note: 'All-you-can-eat. Rodizio tableside service. No surprises.',
             price_cta:  'Reserve Your Table',
 
-            loc_eye:   'Find Us',
-            loc_h2:    'Come Hungry',
-            loc_hours: 'Open Daily · Call for Hours',
-            loc_cta1:  'Call to Reserve',
-            loc_cta2:  'WhatsApp',
+            loc_eye:  'Find Us',
+            loc_h2:   'Come Hungry',
+            hours: [
+              { days: 'Mon – Fri', time: '12:00 PM – 7:00 PM' },
+              { days: 'Saturday',  time: '12:00 PM – 8:00 PM' },
+              { days: 'Sunday',    time: '12:00 PM – 6:00 PM' },
+            ],
+            loc_cta1: 'Call to Reserve',
+            loc_cta2: 'WhatsApp',
 
             footer: '© 2025 Monarca Steakhouse. All rights reserved.',
           },
@@ -715,11 +726,15 @@
             price_note: 'Todo lo que puedas comer. Servicio rodizio. Sin sorpresas.',
             price_cta:  'Reservar Tu Mesa',
 
-            loc_eye:   'Encuéntranos',
-            loc_h2:    'Ven con Hambre',
-            loc_hours: 'Abierto todos los días · Llama para horarios',
-            loc_cta1:  'Llamar para Reservar',
-            loc_cta2:  'WhatsApp',
+            loc_eye:  'Encuéntranos',
+            loc_h2:   'Ven con Hambre',
+            hours: [
+              { days: 'Lun – Vie', time: '12:00 PM – 7:00 PM' },
+              { days: 'Sábado',    time: '12:00 PM – 8:00 PM' },
+              { days: 'Domingo',   time: '12:00 PM – 6:00 PM' },
+            ],
+            loc_cta1: 'Llamar para Reservar',
+            loc_cta2: 'WhatsApp',
 
             footer: '© 2025 Monarca Steakhouse. Todos los derechos reservados.',
           },
